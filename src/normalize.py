@@ -4,7 +4,7 @@ import sys
 from FileHandler import *
 from Dataset import *
 
-parser = argparse.ArgumentParser(description="Impute the missing data")
+parser = argparse.ArgumentParser(description="Normalize the value")
 
 parser.add_argument("path",
                     action='store',
@@ -13,7 +13,7 @@ parser.add_argument("path",
 
 parser.add_argument("--method",
                     action='store',
-                    choices=['mode','mean','median'],
+                    choices=['min-max','z-score'],
                     required=True,
                     type=str)
 
@@ -39,7 +39,7 @@ columns = args['columns']
 try:
     df = loadCSV(inputPath)
     for column in columns:
-        df.fillMissingAttribute(column,method)
+        df.normalizeAttribute(column, method)
     exportCSV(outputPath,df)
 except ValueError as e:
     print(e)
