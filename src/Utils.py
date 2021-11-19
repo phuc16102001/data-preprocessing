@@ -10,8 +10,8 @@ def loadCSV(path):
     
     for line in file:
         line = line.replace("\n","")
-        dataset.addSample(Sample(dataset.lsAttribute,line.split(",")))
+        sample = Sample(dataset.getAttributes(),line.split(","))
+        dataset.addSample(sample)
     
     file.close()
-    
     return dataset
