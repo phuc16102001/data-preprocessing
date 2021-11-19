@@ -1,4 +1,5 @@
 from Sample import Sample
+import math
 
 class Dataset:
     lsAttribute = []
@@ -65,8 +66,42 @@ class Dataset:
 
         for sample in self.data:
             temp = sample.getValue(attributeName)
-            if temp != "":
+            if temp == "":
                 sample.setValue(attributeName, fillValue)
+
+    def normalizeAttribute(self, attributeName, method = "min-max"):
+        listValueAttribute = []
+
+        for sample in self.data:
+            temp = sample.getValue(attributeName)
+            if temp != "":
+                listValueAttribute.append(temp)
+
+                if type(temp) == str:
+                    print("ahihihi") #cái này cần m tự bắt =))
+
+        if method == "min-max":
+            minValue = min(listValueAttribute)
+            maxValue = max(listValueAttribute)
+            for sample in self.data:
+                value = sample.getValue(attributeName)
+                if value != "":
+                    normalizeValue = (value - minValue) / (maxValue - minValue)
+                    sample.setValue(attributeName, normalizeValue)
+        elif method == "z-score":
+            mean = sum(listValueAttribute) / len(listValueAttribute)
+            std = 0
+            for value in listValueAttribute:
+                std += (value - mean)**2
+            std = math.sqrt(std / len(listValueAttribute))
+
+            for sample in self.data:
+                value = sample.getValue(attributeName)
+                if value != "":
+                    normalizeValue = (value - mean) / std
+                    sample.setValue(attributeName, normalizeValue)
+
+
 
     def count(self):
         return len(self.data)
