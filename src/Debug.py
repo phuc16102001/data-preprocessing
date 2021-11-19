@@ -5,5 +5,5 @@ print("Number of samples:",dataset.count())
 print("Missing class\n",dataset.missingAttribute())
 print("Number of missing samples:",dataset.countMissingSample())
 
-dataset.normalizeAttribute('Score', method='z-score')
+dataset.removeDuplicated()
 exportCSV("output/output.csv", dataset)

@@ -82,7 +82,7 @@ class Dataset:
     """
     def missingAttribute(self):                           
         result = dict()
-        for attribute in self.lsAttribute:
+        for attribute in self.getAttributes():
             for sample in self.data:
                 value = sample.getValue(attribute)
                 if (value==""):
@@ -101,7 +101,8 @@ class Dataset:
     def countMissingSample(self):                           
         count = 0
         for sample in self.data:
-            if (sample.isMissing()):
+            missingAttribute = sample.getMissing()
+            if (len(missingAttribute)!=0):
                 count += 1
         return count
 
@@ -170,3 +171,49 @@ class Dataset:
             elif (method=="Z-SCORE"):
                 normalizeValue = normalizeZScore(mean,std,value)
             sample.setValue(attributeName, normalizeValue)
+            
+    """
+    Remove samples whose number of missing attribute is greater than the threshold
+    
+    Args:
+        threshold: the threshold of missing values to be removed (default is 50%)
+    """
+    def removeSamples(self, threshold=0.5):
+        nAttribute = len(self.getAttributes())
+        
+        for sample in self.data:
+            missingAttribute = sample.getMissing()
+            rate = len(missingAttribute)/nAttribute
+            
+            if (rate>threshold):
+                self.data.remove(sample)
+    
+    """
+    Remove attributes whose number of missing samples is greater than the threshold
+    
+    Args:
+        threshold: the threshold of missing samples to be removed (default is 50%)
+    """
+    def removeAttributes(self, threshold=0.5):
+        missingAttribute = self.missingAttribute()
+        nSample = self.count()
+        
+        for attribute in missingAttribute.keys():
+            rate = missingAttribute[attribute]/nSample
+            
+            if (rate<=threshold):
+                continue
+            
+            self.lsAttribute.remove(attribute)
+            for sample in self.data:
+                sample.removeAttribute(attribute)
+            
+    """
+    Remove duplicated samples
+    """
+    def removeDuplicated(self):
+        newData = []
+        for sample in self.data:
+            if (not(sample in newData)):
+                newData.append(sample)
+        self.data = newData
