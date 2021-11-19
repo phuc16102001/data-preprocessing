@@ -1,7 +1,13 @@
 from Sample import Sample
+from Utils import *
 import math
 
 class Dataset:
+    """
+    Attribute:
+        lsAttribute: the list of attribute header
+        data: samples of data frame, each sample is a Sample object
+    """
     lsAttribute = []
     data = []
     
@@ -71,11 +77,8 @@ class Dataset:
     """ 
     Finding missing attributes and count number of missing sample for each
     
-    Args:
-        nothing
     Returns:
-        dict: A dictionary structure contains missing attributes as key, 
-        and number of missing sample as value
+        dict: A dictionary structure contains missing attributes as key, and number of missing sample as value
     """
     def missingAttribute(self):                           
         result = dict()
@@ -92,8 +95,6 @@ class Dataset:
     """
     Count the number of missing sample (sample that has one or more missing value)
     
-    Args:
-        nothing
     Returns:
         count: A integer number, the number of missing sample
     """
@@ -109,80 +110,63 @@ class Dataset:
     
     Args:
         attributeName: the name of attribute need to fill
-        method: the method name (Median, Mode, Mean)
-    Returns:
-        nothing
+        method: the method name (Median, Mode, Mean), the argument is not case-sensitive
     """
-    def fillMissingAttribute(self, attributeName, method = "Median"):  #3
-        listValueAttribute = []
+    def fillMissingAttribute(self, attributeName, method):
+        method = method.upper()
+        
+        lsValue = []
+        for sample in self.data:
+            value = sample.getValue(attributeName)
+            if value == "":
+                continue
+            if (type(value) == str) and (method!="MODE"):
+                raise ValueError("Method for nomial attribute must be method=\"MODE\"")
+            lsValue.append(value)
+        
         fillValue = None
+        if method == "MODE":
+            fillValue = findMode(lsValue)
+        elif method == "MEDIAN":
+            fillValue = findMedian(lsValue)
+        elif method == "MEAN":
+            fillValue = findMean(lsValue)
 
         for sample in self.data:
-            temp = sample.getValue(attributeName)
-            if temp != "":
-                listValueAttribute.append(temp)
-
-                if type(temp) == str:
-                    method = "Mode"
-
-        if method == "Mode":
-            listAttributeFre = {}
-            for value in listValueAttribute:
-                listAttributeFre[value] += 1
-            fillValue = max(listAttributeFre, key=listAttributeFre.get)
-        elif method == "Median":
-            sorted(listValueAttribute)
-            if len(listValueAttribute) % 2 == 1:
-                mid = len(listValueAttribute)//2 + 1
-                fillValue = listValueAttribute[mid]
-            else:
-                mid = len(listValueAttribute) // 2
-                fillValue = (listValueAttribute[mid] + listValueAttribute[mid+1])/2
-        elif method == "Mean":
-            sum = 0
-            for value in listValueAttribute:
-                sum += value
-            fillValue = sum / len(listValueAttribute)
-
-        for sample in self.data:
-            temp = sample.getValue(attributeName)
-            if temp == "":
+            value = sample.getValue(attributeName)
+            if value == "":
                 sample.setValue(attributeName, fillValue)
 
     """
     Normalize the attributes with different methods
     
     Args:
-    Returns:
+        attributeName: the name of attribute need to normalize
+        method: the method name (Min-max, Z-score), the argument is not case-sensitive
     """
-    def normalizeAttribute(self, attributeName, method = "min-max"):
-        listValueAttribute = []
+    def normalizeAttribute(self, attributeName, method):
+        method = method.upper()
+        
+        lsValue = []
+        for sample in self.data:
+            value = sample.getValue(attributeName)
+            if (value == ""):
+                continue
+            if (type(value) == str):
+                raise ValueError("You can only normalize for numeric attribute")
+            lsValue.append(value)
+
+        minValue = min(lsValue)
+        maxValue = max(lsValue)
+        mean = findMean(lsValue)
+        std = findStd(lsValue)
 
         for sample in self.data:
-            temp = sample.getValue(attributeName)
-            if temp != "":
-                listValueAttribute.append(temp)
-
-                if type(temp) == str:
-                    print("ahihihi") #cái này cần m tự bắt =))
-
-        if method == "min-max":
-            minValue = min(listValueAttribute)
-            maxValue = max(listValueAttribute)
-            for sample in self.data:
-                value = sample.getValue(attributeName)
-                if value != "":
-                    normalizeValue = (value - minValue) / (maxValue - minValue)
-                    sample.setValue(attributeName, normalizeValue)
-        elif method == "z-score":
-            mean = sum(listValueAttribute) / len(listValueAttribute)
-            std = 0
-            for value in listValueAttribute:
-                std += (value - mean)**2
-            std = math.sqrt(std / len(listValueAttribute))
-
-            for sample in self.data:
-                value = sample.getValue(attributeName)
-                if value != "":
-                    normalizeValue = (value - mean) / std
-                    sample.setValue(attributeName, normalizeValue)
+            value = sample.getValue(attributeName)
+            if (value==""):
+                continue
+            if (method=="MIN-MAX"):
+                normalizeValue = normalizeMinMax(minValue, maxValue, value)
+            elif (method=="Z-SCORE"):
+                normalizeValue = normalizeZScore(mean,std,value)
+            sample.setValue(attributeName, normalizeValue)
