@@ -20,7 +20,10 @@ class Sample:
             if (self.data[attribute]==""):
                 return True
         return False
-    
+
+    def setValue(self, attribute, value):
+        self.data[attribute] = value
+
     def __str__(self):
         return str(self.data)
             
