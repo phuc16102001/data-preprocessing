@@ -217,3 +217,14 @@ class Dataset:
             if (not(sample in newData)):
                 newData.append(sample)
         self.data = newData
+        
+    """
+    Add a new attribute with expression
+    
+    Args:
+        expression: a String, the expression for new attribute
+    """
+    def addAttributeExpression(self, expression):
+        self.lsAttribute.append(expression)
+        for sample in self.data:
+            sample.setValueExpression(expression)

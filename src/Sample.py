@@ -1,3 +1,6 @@
+from Utils import *
+import re
+
 class Sample:
     
     data = {}
@@ -88,7 +91,21 @@ class Sample:
     """
     def setValue(self, attribute, value):
         self.data[attribute] = value
-
+        
+    def setValueExpression(self, expression):
+        # lsCharacter = '([\{\}])+-*/'
+        # lsToken = re.findall( r'\w+|[^\s\w]', expression)
+        
+        # for i in range(len(lsToken)):
+        #     if not(lsToken[i] in lsCharacter):
+        #         lsToken[i] = "self.data[%s]"%lsToken[i]
+        # s = ''.join(lsToken)
+        
+        try:
+            self.data[expression] = eval(expression,self.data)
+        except Exception as e:
+            self.data[expression] = ''
+        
     """
     Remove an attribute from a Sample
     
