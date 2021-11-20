@@ -56,8 +56,8 @@ impute.py "../data/house-prices.csv" --method="median" --columns LotArea LotFron
 
 # Normalizing data
 This feature gives you the ability to normalize the numeric value using different methods:
-- Min-max: Normalize the value min to `0`, max to `1` and other value gets between `(0,1)`. Using the formula: ![equation](https://latex.codecogs.com/gif.latex?\frac{value-min}{max-min})
-- Z-score: A normalization strategy avoid the outlier issue based on mean and standard deviation. Using the formula: ![equation](https://latex.codecogs.com/gif.latex?\frac{value-\mu}{\sigma})
+- Min-max: Normalize the value min to `0`, max to `1` and other value gets between `(0,1)`. Using the formula: ![equation](https://latex.codecogs.com/png.latex?\frac{value-min}{max-min})
+- Z-score: A normalization strategy avoid the outlier issue based on mean and standard deviation. Using the formula: ![equation](https://latex.codecogs.com/png.latex?\frac{value-\mu}{\sigma})
 
 To run the file, you need to use:
 ```bash
