@@ -122,7 +122,7 @@ class Dataset:
             if value == "":
                 continue
             if (type(value) == str) and (method!="MODE"):
-                raise ValueError("Method for nomial attribute must be method=\"MODE\"")
+                raise ValueError("Method for nominal attribute must be method=\"MODE\"")
             lsValue.append(value)
         
         fillValue = None
