@@ -70,6 +70,7 @@ class Dataset:
         self.lsAttribute.append(attributeName)
         for i in range(len(data)):
             try:
+                # Casting for numeric attribute
                 self.data[i][attributeName] = float(sampleValues[i])
             except:
                 self.data[i][attributeName] = sampleValues[i]
@@ -86,6 +87,7 @@ class Dataset:
             for sample in self.data:
                 value = sample.getValue(attribute)
                 if (value==""):
+                    # Increase couting of missing attribute (or create in dictionary)
                     if (attribute in result):
                         result[attribute] += 1
                     else:
@@ -101,6 +103,7 @@ class Dataset:
     def countMissingSample(self):                           
         count = 0
         for sample in self.data:
+            # Get list of missing attribute
             missingAttribute = sample.getMissing()
             if (len(missingAttribute)!=0):
                 count += 1
@@ -116,15 +119,19 @@ class Dataset:
     def fillMissingAttribute(self, attributeName, method):
         method = method.upper()
         
+        # Extract list values of an attribute
         lsValue = []
         for sample in self.data:
             value = sample.getValue(attributeName)
+            # Skip missing value
             if value == "":
                 continue
+            # If type of attribute is nominal, the medthod must be mode
             if (type(value) == str) and (method!="MODE"):
                 raise ValueError("Method for nominal attribute must be method=\"MODE\"")
             lsValue.append(value)
         
+        # Find the filling value (Refers Utils.py)
         fillValue = None
         if method == "MODE":
             fillValue = findMode(lsValue)
@@ -133,6 +140,7 @@ class Dataset:
         elif method == "MEAN":
             fillValue = findMean(lsValue)
 
+        # Fill the value to missing one
         for sample in self.data:
             value = sample.getValue(attributeName)
             if value == "":
@@ -148,20 +156,25 @@ class Dataset:
     def normalizeAttribute(self, attributeName, method):
         method = method.upper()
         
+        # Extract list values of an attribute
         lsValue = []
         for sample in self.data:
             value = sample.getValue(attributeName)
+            # Skip missing value
             if (value == ""):
                 continue
+            # If type of attribute is nominal, the medthod must be mode
             if (type(value) == str):
                 raise ValueError("You can only normalize for numeric attribute")
             lsValue.append(value)
 
+        # Calculate all basic property
         minValue = min(lsValue)
         maxValue = max(lsValue)
         mean = findMean(lsValue)
         std = findStd(lsValue)
 
+        # Normalizing
         for sample in self.data:
             value = sample.getValue(attributeName)
             if (value==""):
@@ -201,9 +214,11 @@ class Dataset:
         for attribute in missingAttribute.keys():
             rate = missingAttribute[attribute]/nSample
             
+            # Skip if rate is not larger than threshold
             if (rate<=threshold):
                 continue
             
+            # Remove attribute
             self.lsAttribute.remove(attribute)
             for sample in self.data:
                 sample.removeAttribute(attribute)
@@ -214,6 +229,7 @@ class Dataset:
     def removeDuplicated(self):
         newData = []
         for sample in self.data:
+            # Compare with __eq__ method which override
             if (not(sample in newData)):
                 newData.append(sample)
         self.data = newData

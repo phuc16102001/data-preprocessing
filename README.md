@@ -1,7 +1,6 @@
 # Data mining - Preprocessing
 A simple implementation for pre-processing data
 
-
 ## Features
 The implementation provide some basic data pre-processing tasks, including: 
 - List missing information
@@ -45,7 +44,7 @@ impute.py <input-path> --method=<method> --columns <column 1> ... <column N> --o
 ```
 Explaination of arguments:
 - `<input-path>`: the path direct to .csv file
-- `<method>`: the imputing method
+- `<method>`: the imputing method (`mean`, `median`, `mode`)
 - `<column 1>...<column N>`: the attributes to be imputed
 - `<output-path>`: the .csv file to output
 
@@ -65,7 +64,7 @@ normalize.py <input-path> --method=<method> --columns <column 1> ... <column N> 
 ```
 Explaination of arguments:
 - `<input-path>`: the path direct to .csv file
-- `<method>`: the normalizing method
+- `<method>`: the normalizing method (`min-max`,`z-score`)
 - `<column 1>...<column N>`: the attributes to be normalized
 - `<output-path>`: the .csv file to output
 
@@ -88,7 +87,7 @@ remove-threshold.py <input-path> --threshold=<threshold> --axis=<axis> --out=<ou
 Explaination of arguments:
 - `<input-path>`: the path direct to .csv file
 - `<threshold>`: the threshold value
-- `<axis>`: removing sample or attribute
+- `<axis>`: removing `sample` or `attribute`
 - `<output-path>`: the .csv file to output
 
 Example:
@@ -132,6 +131,19 @@ evaluate.py "../data/scoreboard.csv" --expression="Math*2+Literature*2+English" 
 ```
 
 # Implement documentation
+The project provide 6 feature files:
+- `evaluate.py`
+- `impute.py`
+- `list-missing.py`
+- `normalize.py`
+- `remove-duplicated.py`
+- `remove-threshold.py`
+
+These file using `FileHandler.py` to interact with CSV file (import and export)
+
+With the basic core model, we build an Dataset (or dataframe) contains a list of attributes and a list of sample. Each sample model, we store its attribute and value with dictionary data structure. You can refer from `Dataset.py` and `Sample.py`
+
+Moreover, to dealing with different mathematics calculation, we seperate math functions into `Utils.py` (e.g. findMean, findMedian, normalize, etc)
 
 # Contribution
 This project is done by [phuc16102001](https://github.com/phuc16102001) and [Qambitions](https://github.com/Qambitions) during participating the "Data mining" course in HCMUS (Ho Chi Minh University of Science). References are welcome but please ***do not copy without permission***.

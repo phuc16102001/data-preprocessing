@@ -3,6 +3,10 @@ import re
 
 class Sample:
     
+    """
+    Attribute:
+        data: a dictionary, contains value for attribute, key is attribute
+    """
     data = {}
     
     """
@@ -16,6 +20,7 @@ class Sample:
         self.data = {}
         for i in range(len(attributes)):
             try:
+                # Try to casting for numeric
                 self.data[attributes[i]] = float(values[i])
             except:
                 self.data[attributes[i]] = values[i]
@@ -86,21 +91,19 @@ class Sample:
     Setter for an attribute
     
     Args:
-        attribute: a String represented for the setting attribute
+        attribute: a String, represented for the setting attribute
         value: the value to set
     """
     def setValue(self, attribute, value):
         self.data[attribute] = value
         
+    """
+    Set a value with the given expression
+    
+    Args:
+        expression: a String, the expression for value (if any value is missing, the result will be missing)
+    """
     def setValueExpression(self, expression):
-        # lsCharacter = '([\{\}])+-*/'
-        # lsToken = re.findall( r'\w+|[^\s\w]', expression)
-        
-        # for i in range(len(lsToken)):
-        #     if not(lsToken[i] in lsCharacter):
-        #         lsToken[i] = "self.data[%s]"%lsToken[i]
-        # s = ''.join(lsToken)
-        
         try:
             self.data[expression] = eval(expression,self.data)
         except Exception as e:
@@ -125,4 +128,3 @@ class Sample:
     """
     def __str__(self):
         return str(self.data)
-            
