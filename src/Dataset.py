@@ -229,7 +229,7 @@ class Dataset:
     def removeDuplicated(self):
         newData = []
         for sample in self.data:
-            # Compare with __eq__ method which override
+            # Compare with __eq__ method which is overrided
             if (not(sample in newData)):
                 newData.append(sample)
         self.data = newData
