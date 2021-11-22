@@ -108,7 +108,25 @@ class Dataset:
             if (len(missingAttribute)!=0):
                 count += 1
         return count
-
+    
+    """
+    Get a list of value for an given attribute
+    
+    Args:
+        attribute: a String, name of attribute we want to get
+    Returns:
+        lsValue: a List of value, values extracted from samples
+    """
+    def getValues(self, attribute):
+        lsValue = []
+        for sample in self.data:
+            value = sample.getValue(attribute)
+            # Skip missing value
+            if value == "":
+                continue
+            lsValue.append(value)
+        return lsValue
+    
     """
     Fill the missing value of an attribute with methods
     
@@ -120,16 +138,10 @@ class Dataset:
         method = method.upper()
         
         # Extract list values of an attribute
-        lsValue = []
-        for sample in self.data:
-            value = sample.getValue(attributeName)
-            # Skip missing value
-            if value == "":
-                continue
-            # If type of attribute is nominal, the medthod must be mode
+        lsValue = self.getValues(attributeName)
+        for value in lsValue:
             if (type(value) == str) and (method!="MODE"):
                 raise ValueError("Method for nominal attribute must be method=\"MODE\"")
-            lsValue.append(value)
         
         # Find the filling value (Refers Utils.py)
         fillValue = None
@@ -157,16 +169,10 @@ class Dataset:
         method = method.upper()
         
         # Extract list values of an attribute
-        lsValue = []
-        for sample in self.data:
-            value = sample.getValue(attributeName)
-            # Skip missing value
-            if (value == ""):
-                continue
-            # If type of attribute is nominal, the medthod must be mode
+        lsValue = self.getValues(attributeName)
+        for value in lsValue:
             if (type(value) == str):
                 raise ValueError("You can only normalize for numeric attribute")
-            lsValue.append(value)
 
         # Calculate all basic property
         minValue = min(lsValue)
@@ -193,14 +199,16 @@ class Dataset:
     """
     def removeSamples(self, threshold=0.5):
         nAttribute = len(self.getAttributes())
+        newData = []
         
         for sample in self.data:
             missingAttribute = sample.getMissing()
             rate = len(missingAttribute)/nAttribute
             
-            if (rate>threshold):
-                self.data.remove(sample)
-    
+            if (not(rate>threshold)):
+                newData.append(sample)
+        self.data = newData
+        
     """
     Remove attributes whose number of missing samples is greater than the threshold
     
