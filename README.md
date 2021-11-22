@@ -26,7 +26,7 @@ Explaination of arguments:
 - `<input-path>`: the path direct to .csv file
 
 Example:
-```
+```bash
 list-missing.py "../data/house-prices.csv"
 ```
 
@@ -49,7 +49,7 @@ Explaination of arguments:
 - `<output-path>`: the .csv file to output
 
 Example:
-```
+```bash
 impute.py "../data/house-prices.csv" --method="median" --columns LotArea LotFrontage --out="../output/out.csv"
 ```
 
@@ -69,7 +69,7 @@ Explaination of arguments:
 - `<output-path>`: the .csv file to output
 
 Example:
-```
+```bash
 normalize.py "../data/house-prices.csv" --method="z-score" --columns LotArea LotFrontage --out="../output/out.csv"
 ```
 
@@ -91,7 +91,7 @@ Explaination of arguments:
 - `<output-path>`: the .csv file to output
 
 Example:
-```
+```bash
 remove-threshold.py "../data/house-prices.csv" --threshold=0.5 --axis="sample" --out="../output/out.csv" 
 ```
 
@@ -108,7 +108,7 @@ Explaination of arguments:
 - `<output-path>`: the .csv file to output
 
 Example:
-```
+```bash
 remove-duplicated.py "../data/house-prices.csv" --out="../output/out.csv" 
 ```
 
@@ -116,7 +116,7 @@ remove-duplicated.py "../data/house-prices.csv" --out="../output/out.csv"
 Using the feature, you can create a new attribute with a give expression. For example, with the dataframe whose attribute are `width`, `height`, we can create a new attribute `width*height`
 
 Executing the file:
-```
+```bash
 evaluate.py <input-path> --expression=<expression> --out=<output-path>
 ```
 
@@ -126,7 +126,7 @@ Explaination of arguments:
 - `<output-path>`: the .csv file to output
 
 Example:
-```
+```bash
 evaluate.py "../data/scoreboard.csv" --expression="Math*2+Literature*2+English" --out="../output/out.csv"
 ```
 
